@@ -14,9 +14,7 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        $users = Cache::remember('users', 3367000,function () {
-            return User::get();
-        });
+        $users = User::get();
         return Inertia::render('dashboard', compact('users'));
     }
 

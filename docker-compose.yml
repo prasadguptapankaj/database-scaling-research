@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  primary_db:
+    image: mysql:8
+    container_name: mysql_primary
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: laravel_db
+      MYSQL_USER: laravel
+      MYSQL_PASSWORD: secret
+    ports:
+      - "3306:3306"
+    volumes:
+      - primary_db_data:/var/lib/mysql
+
+  replica_db:
+    image: mysql:8
+    container_name: mysql_replica
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: laravel_db
+      MYSQL_USER: laravel
+      MYSQL_PASSWORD: secret
+    ports:
+      - "3307:3306"
+    volumes:
+      - replica_db_data:/var/lib/mysql
+
+volumes:
+  primary_db_data:
+  replica_db_data:
