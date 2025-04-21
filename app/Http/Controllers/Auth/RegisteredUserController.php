@@ -39,7 +39,9 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        $user = User::create([
+        session(['shard_user_email' => $request->email]);
+
+        $user = (new User)->setShardConnection($request->email)->create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
@@ -53,6 +55,7 @@ class RegisteredUserController extends Controller
         // Send notification to all users
         
         Auth::login($user);
+
         Notification::send($allUsers, new SendEmail($user));
 
         return to_route('dashboard');

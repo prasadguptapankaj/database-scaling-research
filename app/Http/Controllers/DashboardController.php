@@ -14,7 +14,11 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        $users = User::get();
+        $users = collect();
+        foreach (config('database.shards') as $shard) {
+            $data = (new User)->setConnection($shard)->get();
+            $users = $users->merge($data);
+        }
         return Inertia::render('dashboard', compact('users'));
     }
 
